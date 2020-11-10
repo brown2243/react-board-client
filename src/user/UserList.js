@@ -1,5 +1,16 @@
 import React, {Component} from 'react'
-import ApiService from '../route/ApiService'
+import ApiService from '../ApiService'
+
+import Table from '@material-ui/core/Table'
+import TableBody from '@material-ui/core/TableBody'
+import TableHead from '@material-ui/core/TableHead'
+import TableRow from '@material-ui/core/TableRow'
+import TableCell from '@material-ui/core/TableCell'
+import Button from '@material-ui/core/Button'
+import Typography from '@material-ui/core/Typography'
+import CreateIcon from '@material-ui/icons/Create'
+import EditIcon from '@material-ui/icons/Edit'
+import DeleteIcon from '@material-ui/icons/Delete'
 
 class UserList extends Component{
     constructor(props){
@@ -31,43 +42,61 @@ class UserList extends Component{
     componentWillUnmount(){
         console.log('componentWillUnmount Run')
     }
+    
+    addUser = () => {
+        window.localStorage.removeItem('id')
+        this.props.history.push('/add-user')
+    }
 
     render(){
         console.log('render Run')
+        console.log(this.state.users)
         return(
             <div>
-                <h4>User List</h4>
-                <input type='button' value='사용자 추가' />
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>UserName</th>
-                            <th>FirstName</th>
-                            <th>LastName</th>
-                            <th>Gender</th>
-                            <th>Salary</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.state.users.map(user => {
-                        <tr key={user.id}>
-                            <td>{user.id}</td>
-                            <td>{user.userName}</td>
-                            <td>{user.firstName}</td>
-                            <td>{user.lastName}</td>
-                            <td>{user.gender}</td>
-                            <td>{user.salary}</td>
-                            <td>edit</td>
-                            <td>delete</td>
-                        </tr>
-                    })}
-                    </tbody>
-                </table>
+                <Typography variant='h6' style={style}>User List</Typography>
+                <Button 
+                    variant="contained" 
+                    color='primary' 
+                    type='button'
+                    onClick={this.addUser}
+                    >추가</Button>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell align='center'>ID</TableCell>
+                            <TableCell align='center'>UserName</TableCell>
+                            <TableCell align='center'>FirstName</TableCell>
+                            <TableCell align='center'>LastName</TableCell>
+                            <TableCell align='center'>Gender</TableCell>
+                            <TableCell align='center'>Salary($)</TableCell>
+                            <TableCell align='center'>Edit</TableCell>
+                            <TableCell align='center'>Delete</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {this.state.users.map(user => 
+                        <TableRow key={user.id}>
+                            <TableCell align='right'>{user.id}</TableCell>
+                            <TableCell align='left'>{user.userName}</TableCell>
+                            <TableCell align='left'>{user.firstName}</TableCell>
+                            <TableCell align='left'>{user.lastName}</TableCell>
+                            <TableCell align='center'>{user.gender}</TableCell>
+                            <TableCell align='right'>{user.salary}</TableCell>
+                            <TableCell align='center'><EditIcon /></TableCell>
+                            <TableCell align='center'><DeleteIcon /></TableCell>
+                            
+                        </TableRow>
+                    )}
+                    </TableBody>
+                </Table>
             </div>
         )
     }
+}
+
+const style = {
+    display:'flex',
+    justifyContent:'center',
+    marginTop:'40px'
 }
 export default UserList;

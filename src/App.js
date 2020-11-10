@@ -1,13 +1,18 @@
 import React,{Component} from 'react'
 import './App.css';
-import UserList from './user/UserList'
+import Router from './route/Router'
+import Navbar from './route/NavBar'
+
+import Container from '@material-ui/core/Container'
+
 class App extends Component {
   render (){
     return (
       <div className="App">
-        <div className='container'>
-          <UserList></UserList>
-        </div>
+        <Navbar />
+        <Container>
+          <Router></Router>
+        </Container>
       </div>
     );
   }
