@@ -15,7 +15,7 @@ class ApiService{
     editUser(user){ // PUT 사용자 수정 정보 Back-end에 전달
         return Axios.put(API_URL+'/'+user.id, user)
     }
-    removeUser(id){  // DELETE 사용자 아이디 전달
+    deleteUser(id){  // DELETE 사용자 아이디 전달
         return Axios.delete(API_URL+'/'+id)
     }
 }

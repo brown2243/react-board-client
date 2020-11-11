@@ -10,11 +10,12 @@ import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 
-class AddUser extends Component{
+class EditUser extends Component{
     constructor(props){
         super(props)
 
         this.state={
+            id: '',
             userName: '',
             password: '',
             firstName: '',
@@ -24,6 +25,30 @@ class AddUser extends Component{
             message:null
         }
     }
+
+    componentDidMount(){
+        this.loadUser()
+    }
+    loadUser = () => {
+        ApiService.fetchUserByID(window.localStorage.getItem('id'))
+        .then(res => {
+            let user = res.data
+            this.setState({
+                id: user.id,
+                userName: user.userName,
+                password: user.password,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                gender:user.gender,
+                salary:user.salary
+            })
+        })
+        .catch(err => {
+            console.error("loadUser() error", err)
+            alert('유저 조회 실패!!!')
+        })
+    }
+    
     onChange = (e) => {
         this.setState({
             [e.target.name]:e.target.value
@@ -33,6 +58,7 @@ class AddUser extends Component{
     saveUser = (e) => {
         e.preventDefault()
         let user = {
+            id : this.state.id,
             userName: this.state.userName,
             password: this.state.password,
             firstName: this.state.firstName,
@@ -40,24 +66,24 @@ class AddUser extends Component{
             gender: this.state.gender,
             salary: this.state.salary
         }
-        ApiService.addUser(user)
+        ApiService.editUser(user)
         .then(res =>{
-            this.setState({message:'유저 등록 성공!!!'})
+            this.setState({message:'유저 수정 성공!!!'})
             console.info(this.state.message)
             this.props.history.push('/users')
         })
         .catch(err => {
             console.error("saveUser() error", err)
-            alert('유저 등록 실패!!!')
+            alert('유저 수정 실패!!!')
         })
     }
-
+    
     render(){
         return(
             <div>
-                <Typography variant='h6' style={style}>사용자 추가</Typography>
+                <Typography variant='h6' style={style}>사용자 수정</Typography>
                 <form method='post'>
-                    <TextField style={style} type='text' id='userName' name='userName' label='사용자이름' margin='none' fullWidth value={this.state.userName} onChange={this.onChange} />
+                    <TextField style={style} type='text' id='userName' name='userName' label='사용자이름' margin='none' fullWidth value={this.state.userName}  />
                     <TextField style={style} type='password' id='password' name='password' label='패스워드' margin='none' fullWidth value={this.state.password} onChange={this.onChange} />
                     <TextField style={style} type='text' id='firstName' name='firstName' label='이름' margin='none' fullWidth value={this.state.firstName} onChange={this.onChange} />
                     <TextField style={style} type='text' id='lastName' name='lastName' label='성' margin='none' fullWidth value={this.state.lastName} onChange={this.onChange} />
@@ -89,4 +115,4 @@ const buttonStyle={
     marginTop:'40px',
     textAlign:'right'
 }
-export default AddUser
+export default EditUser

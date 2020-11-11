@@ -36,7 +36,6 @@ class UserList extends Component{
                   .catch(err =>{
                       console.error('reloadUserList() 에러!',err)
                   })
-    
     }
 
     componentWillUnmount(){
@@ -47,7 +46,27 @@ class UserList extends Component{
         window.localStorage.removeItem('id')
         this.props.history.push('/add-user')
     }
+    editUser = (id) =>{
+        window.localStorage.setItem('id',id)
+        this.props.history.push('/edit-user')
+    }
+    deleteUser = (id) =>{
+        if(window.confirm('삭제하시겠습니까?')){
+            ApiService.deleteUser(id)
+            .then(res =>{
+                this.setState({
+                    message:'삭제 성공!!!',
+                    users: this.state.users.filter(user => user.id !== id)
+                })
+                alert("삭제 성공!")
+            })
+            .catch(err => {
+                console.error("deleteUser() error", err)
+                alert('유저 삭제 실패!!!')
+            })
+        }
 
+    }
     render(){
         console.log('render Run')
         console.log(this.state.users)
@@ -82,8 +101,8 @@ class UserList extends Component{
                             <TableCell align='left'>{user.lastName}</TableCell>
                             <TableCell align='center'>{user.gender}</TableCell>
                             <TableCell align='right'>{user.salary}</TableCell>
-                            <TableCell align='center'><EditIcon /></TableCell>
-                            <TableCell align='center'><DeleteIcon /></TableCell>
+                            <TableCell align='center' onClick={() => this.editUser(user.id)}><EditIcon /></TableCell>
+                            <TableCell align='center' onClick={() => this.deleteUser(user.id)}><DeleteIcon /></TableCell>
                             
                         </TableRow>
                     )}
